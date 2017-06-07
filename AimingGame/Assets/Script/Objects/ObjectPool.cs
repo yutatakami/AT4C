@@ -51,6 +51,7 @@ namespace ObjectManager {
 				return obj;
 			}
 
+
 			List<GameObject> gameObjects = ObjectManager.Instance.list[tag];
 
 			//	使用可能オブジェクト検索ループ
