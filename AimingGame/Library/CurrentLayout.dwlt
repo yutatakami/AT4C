@@ -43,7 +43,11 @@ MonoBehaviour:
     y: 0
     width: 1536
     height: 781
+<<<<<<< HEAD
   m_MinSize: {x: 950, y: 300}
+=======
+  m_MinSize: {x: 950, y: 492}
+>>>>>>> 99f9a57072042d6d96c3ffbf1612644805764df2
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &3
 MonoBehaviour:
@@ -88,10 +92,17 @@ MonoBehaviour:
     y: 30
     width: 1536
     height: 731
+<<<<<<< HEAD
   m_MinSize: {x: 913, y: 442}
   m_MaxSize: {x: 22008, y: 10021}
   vertical: 0
   controlID: 142
+=======
+  m_MinSize: {x: 917, y: 442}
+  m_MaxSize: {x: 22012, y: 10021}
+  vertical: 0
+  controlID: 91
+>>>>>>> 99f9a57072042d6d96c3ffbf1612644805764df2
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -154,8 +165,13 @@ MonoBehaviour:
     y: 0
     width: 206
     height: 731
+<<<<<<< HEAD
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 4000, y: 4000}
+=======
+  m_MinSize: {x: 204, y: 221}
+  m_MaxSize: {x: 4004, y: 4021}
+>>>>>>> 99f9a57072042d6d96c3ffbf1612644805764df2
   m_ActualView: {fileID: 14}
   m_Panes:
   - {fileID: 14}
@@ -231,8 +247,13 @@ MonoBehaviour:
     y: 0
     width: 625
     height: 377
+<<<<<<< HEAD
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 4000, y: 4000}
+=======
+  m_MinSize: {x: 202, y: 221}
+  m_MaxSize: {x: 4002, y: 4021}
+>>>>>>> 99f9a57072042d6d96c3ffbf1612644805764df2
   m_ActualView: {fileID: 18}
   m_Panes:
   - {fileID: 18}
@@ -256,8 +277,13 @@ MonoBehaviour:
     y: 377
     width: 625
     height: 354
+<<<<<<< HEAD
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 4000, y: 4000}
+=======
+  m_MinSize: {x: 202, y: 221}
+  m_MaxSize: {x: 4002, y: 4021}
+>>>>>>> 99f9a57072042d6d96c3ffbf1612644805764df2
   m_ActualView: {fileID: 17}
   m_Panes:
   - {fileID: 17}
@@ -285,10 +311,10 @@ MonoBehaviour:
   m_DepthBufferBits: 0
   m_Pos:
     serializedVersion: 2
-    x: 853
-    y: 100
-    width: 278
-    height: 734
+    x: 833
+    y: 92
+    width: 284
+    height: 710
 --- !u!114 &13
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -348,9 +374,15 @@ MonoBehaviour:
     height: 710
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
+<<<<<<< HEAD
     m_SelectedIDs: 40250000
     m_LastClickedID: 0
     m_ExpandedIDs: 7af9ffff00000000e4270000
+=======
+    m_SelectedIDs: 70060000
+    m_LastClickedID: 0
+    m_ExpandedIDs: e0fbffff00000000
+>>>>>>> 99f9a57072042d6d96c3ffbf1612644805764df2
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: TwinsCreator
@@ -443,19 +475,33 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
+<<<<<<< HEAD
     - Assets/Prefab/Enemey
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
   - Assets/Prefab/Enemey
+=======
+    - Assets/Script
+  m_ViewMode: 1
+  m_StartGridSize: 64
+  m_LastFolders:
+  - Assets/Script
+>>>>>>> 99f9a57072042d6d96c3ffbf1612644805764df2
   m_LastFoldersGridSize: -1
   m_LastProjectPath: "C:\\Users\\\u5C71\u7530\u4E00\u6210\\Desktop\\CaseStudy\\AimingGame"
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
+<<<<<<< HEAD
     m_SelectedIDs: 80270000
     m_LastClickedID: 10112
     m_ExpandedIDs: 00000000f02500008c260000f0280000f2280000f4280000f628000000ca9a3bffffff7f
+=======
+    m_SelectedIDs: f8250000
+    m_LastClickedID: 9720
+    m_ExpandedIDs: 0000000020250000d0250000f8250000b4280000b6280000b8280000ba28000000ca9a3bffffff7f
+>>>>>>> 99f9a57072042d6d96c3ffbf1612644805764df2
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -483,7 +529,11 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
+<<<<<<< HEAD
     m_ExpandedIDs: 00000000f02500008c260000f0280000f2280000f4280000f6280000
+=======
+    m_ExpandedIDs: 0000000020250000d0250000b4280000b6280000b8280000ba280000
+>>>>>>> 99f9a57072042d6d96c3ffbf1612644805764df2
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -535,7 +585,7 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
     m_NewAssetIndexInList: -1
-    m_ScrollPosition: {x: 0, y: 0}
+    m_ScrollPosition: {x: 0, y: 371}
     m_GridSize: 64
   m_DirectoriesAreaWidth: 156
 --- !u!114 &17
@@ -646,9 +696,9 @@ MonoBehaviour:
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 0.3917694, y: -7.722229, z: 0.0989418}
+    m_Target: {x: 0.48982677, y: -4.737484, z: 3.0836754}
     speed: 2
-    m_Value: {x: 0.3917694, y: -7.722229, z: 0.0989418}
+    m_Value: {x: 0.48982677, y: -4.737484, z: 3.0836754}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -671,13 +721,17 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
   m_Rotation:
-    m_Target: {x: -0.20445865, y: -0.18376113, z: 0.039109495, w: -0.9606764}
+    m_Target: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
     speed: 2
+<<<<<<< HEAD
     m_Value: {x: -0.20445864, y: -0.18376112, z: 0.03910949, w: -0.9606764}
+=======
+    m_Value: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
+>>>>>>> 99f9a57072042d6d96c3ffbf1612644805764df2
   m_Size:
-    m_Target: 38.28177
+    m_Target: 29.138943
     speed: 2
-    m_Value: 38.28177
+    m_Value: 29.138943
   m_Ortho:
     m_Target: 0
     speed: 2
