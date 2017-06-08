@@ -12,6 +12,8 @@ public class Battery : EnemyBase {
 
 	[SerializeField]GameObject bullet;
 
+	[SerializeField]bool canShoot;
+
 	//	Hoge
 	float interval = 0;
 
@@ -27,6 +29,7 @@ public class Battery : EnemyBase {
 	// Update is called once per frame
 	void Update() {
 
+		if (!canShoot) return;
 		//	弾発射
 		interval += Time.deltaTime;
 		if (interval >= 5) {

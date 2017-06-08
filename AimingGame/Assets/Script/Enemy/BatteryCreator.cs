@@ -9,12 +9,20 @@ public class BatteryCreator : MonoBehaviour {
 
 	//	敵プレハブ
 	[SerializeField]GameObject batteryPrefab;
-	
+
+	[SerializeField]
+	bool OneCreate;
+
 
 	// Use this for initialization
 	void Start() {
-		// 周期的に実行したい場合はコルーチンを使うとよい
-		StartCoroutine(Exec());
+		if (OneCreate) {
+			Create();
+		}
+		else {
+			// 周期的に実行したい場合はコルーチンを使うとよい
+			StartCoroutine(Exec());
+		}
 	}
 	
 
