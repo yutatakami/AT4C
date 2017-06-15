@@ -40,11 +40,16 @@ public class InputManager : SingletonMonoBehaviour<InputManager>
         if (Input.GetMouseButtonDown(0))
         {
             startPosition = prevPosition = Input.mousePosition;
+            startPosition.z = prevPosition.z = Mathf.Abs(Camera.main.transform.position.y);
+            startPosition = Camera.main.ScreenToWorldPoint(startPosition);
+            prevPosition = Camera.main.ScreenToWorldPoint(prevPosition);
         }
 
         if (Input.GetMouseButton(0))
         {
             prevPosition = Input.mousePosition;
+            prevPosition.z = Mathf.Abs(Camera.main.transform.position.y);
+            prevPosition = Camera.main.ScreenToWorldPoint(prevPosition);
             direction = prevPosition - startPosition;
             distance = Vector3.Distance(prevPosition, startPosition);
         }

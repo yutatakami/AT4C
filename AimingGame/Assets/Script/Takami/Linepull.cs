@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DigitalRuby.LightningBolt;
 
 public class Linepull : MonoBehaviour
 {
@@ -55,7 +56,7 @@ public class Linepull : MonoBehaviour
     {
         // 自機の座標を取得
         vplayerPos = gameObject.transform.position;
-        vplayerPos.y = 1.0f;
+        vplayerPos.y = 0.0f;
 
         // タッチしたら
         if (InputManager.Instance.Bigan()) {
@@ -65,11 +66,6 @@ public class Linepull : MonoBehaviour
 
         // LineObjの更新&firstLineの始点更新
         LineUpdata(vplayerPos);
-
-        // デバック
-        if (Input.GetKeyDown(KeyCode.Q)) {
-            LineAllDelete();
-        }
     }
 
     /// <summary>
@@ -89,16 +85,11 @@ public class Linepull : MonoBehaviour
         line.LineObject[nLNum % 2] = ObjectManager.ObjectPool.Instance.GetGameObject(LinePrefab, Vector3.zero, Quaternion.identity);
 
         // リスト内オブジェクトのコンポーネント取得
-        LineRenderer renderer = line.LineObject[nLNum % 2].GetComponent<LineRenderer>();
+        LightningBoltScript bolt = line.LineObject[nLNum % 2].GetComponent<LightningBoltScript>();
         Pointer = line.LineObject[nLNum % 2].transform.FindChild("Linepoint").gameObject;
 
         // ポイントのアクティブをオフ
         Pointer.SetActive(false);
-
-        // コンポーネント初期化
-        renderer.useWorldSpace = true;
-        renderer.SetVertexCount(2);
-        renderer.SetWidth(1.0f, 1.0f);
 
         // 始点の座標を設定
         if ((nLNum % 2) == 0) {
@@ -118,7 +109,7 @@ public class Linepull : MonoBehaviour
             lineList.Add(line);
         }
         // ライン設定
-        renderer.SetPosition(0, line.rendererPosition[nLNum % 2].StartPosition);
+        bolt.StartPosition = line.rendererPosition[nLNum % 2].StartPosition;
     }
 
 
@@ -129,8 +120,8 @@ public class Linepull : MonoBehaviour
     {
         // 1つ目のラインはプレイヤーに引っ付いている
         foreach(CLine obj in lineList) {
-            LineRenderer renderer = obj.LineObject[0].GetComponent<LineRenderer>();
-            renderer.SetPosition(0, playerpos);
+            LightningBoltScript bolt = obj.LineObject[0].GetComponent<LightningBoltScript>();
+            bolt.StartPosition = playerpos;
         }
 
         // タッチしていたらラインを引く
@@ -148,7 +139,7 @@ public class Linepull : MonoBehaviour
         if (line == null) return;
 
         // コンポーネント取得
-        LineRenderer renderer = line.LineObject[nLNum % 2].GetComponent<LineRenderer>();
+        LightningBoltScript bolt = line.LineObject[nLNum % 2].GetComponent<LightningBoltScript>();
 
         // 座標を取得しワールド座標変換
         Vector3 position = InputManager.Instance.GetPrevPos();
@@ -175,7 +166,7 @@ public class Linepull : MonoBehaviour
         }
 
         // ラインの終点を設定
-        renderer.SetPosition(1, line.rendererPosition[nLNum % 2].EndPosition);
+        bolt.EndPosition = line.rendererPosition[nLNum % 2].EndPosition;
         // ポインターを終点の座標に設定
         Pointer.transform.position = line.rendererPosition[nLNum % 2].EndPosition;
         Pointer.SetActive(true);
