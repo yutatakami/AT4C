@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Sample : MonoBehaviour {
+public class Sample : ObjectBase {
     List<GameObject> lineList;  // 線を引くオブジェクト
-    Vector2 startPos;           // 始点の座標
-    Vector2 endPos;             // 終点の座標
+    Vector3 startPos;           // 始点の座標
+    Vector3 endPos;             // 終点の座標
     int ClickCount;             // 
 
     [SerializeField]
@@ -18,9 +18,12 @@ public class Sample : MonoBehaviour {
     {
         // 初期化
         lineList = new List<GameObject>();
-        startPos = Vector2.zero;
-        endPos = Vector2.zero;
+        startPos = Vector3.zero;
+        endPos = Vector3.zero;
         ClickCount = -1;    // 最初の要素が0の為
+
+        // タグ設定
+        searchTag = Search.Tags.Line;
     }
 	
 	// Update is called once per frame
@@ -36,19 +39,18 @@ public class Sample : MonoBehaviour {
                     // リスト内削除＆クリア
                     foreach (GameObject i in lineList)
                     {
-                        Destroy(i);
+						ObjectManager.ObjectPool.Instance.ReleaseGameObject(i);
                     }
                     lineList.Clear();
                     ClickCount = 0; // クリック済みな為
                 }
                 // 新たにゲームオブジェクト生成
                 GameObject obj = new GameObject("LineSample");
+				ObjectManager.ObjectPool.Instance.GetGameObject(obj, Vector3.zero, Quaternion.identity);
                 // コンポーネント追加
                 obj.AddComponent<LineRenderer>();
                 // リストに追加
                 lineList.Add(obj);
-                LineRenderer renderer = obj.GetComponent<LineRenderer>();
-                renderer.useWorldSpace = true;
             }
 
             // タッチしている
@@ -58,6 +60,7 @@ public class Sample : MonoBehaviour {
                 LineRenderer renderer = lineList[ClickCount].GetComponent<LineRenderer>();
 
                 // コンポーネントの初期化
+                renderer.useWorldSpace = true;
                 renderer.SetVertexCount(2);
                 renderer.SetWidth(1.0f, 1.0f);
 
@@ -67,12 +70,20 @@ public class Sample : MonoBehaviour {
                     renderer.SetPosition(0, startPos);
                 }
                 else
-                { 　// 1つ目の線
+                {  // 1つ目の線
+                   // 座標取得
                     startPos = InputManager.Instance.GetStartPos();
+                    // ワールド座標変換
+                    startPos.z = Mathf.Abs(Camera.main.transform.position.y);
+                    startPos = Camera.main.ScreenToWorldPoint(startPos);
                     // ラインの始点に座標を設定
                     renderer.SetPosition(0, startPos);
                 }
+                // 座標取得
                 endPos = InputManager.Instance.GetPrevPos();
+                // ワールド座標変換
+                endPos.z = Mathf.Abs(Camera.main.transform.position.y);
+                endPos = Camera.main.ScreenToWorldPoint(endPos);
                 // ラインの終点に座標を設定
                 renderer.SetPosition(1, endPos);
 
