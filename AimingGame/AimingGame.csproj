@@ -103,6 +103,7 @@
     <Compile Include="Assets\Script\Scenemanager.cs" />
     <Compile Include="Assets\Script\SingletonMonoBehaviour.cs" />
     <Compile Include="Assets\Script\Sound_Manager.cs" />
+    <Compile Include="Assets\Script\StageSelect\StageSelect.cs" />
     <Compile Include="Assets\Script\System\FPSDebug.cs" />
     <Compile Include="Assets\Script\System\MultiDictionary.cs" />
     <Compile Include="Assets\Script\System\Search.cs" />

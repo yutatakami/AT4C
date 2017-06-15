@@ -30,7 +30,6 @@ public class Player : ObjectBase {
     // Update is called once per frame
     void Update()
     {
-
         if (controller.isGrounded)
         {
             // ラインを引き終わったら
