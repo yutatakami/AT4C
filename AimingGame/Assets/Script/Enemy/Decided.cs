@@ -16,16 +16,13 @@ public class Decided : EnemyBase {
 	//	Hoge
 	float interval = 0;
 
-	[SerializeField]
-	bool canShoot;
-
 	// Use this for initialization
 	void Start () {
 		speed = 1.0f;
 		faceSpeed = 5.0f;
 
-		//	キャラコン取得
-		GetCharacterController();
+		//	あたり判定に必要なコンポーネントをコンポーネント
+		GetCollision();
 	}
 	
 	// Update is called once per frame
@@ -37,9 +34,6 @@ public class Decided : EnemyBase {
 		HogeMovePattern(5.0f);
 		//	角度
 		LockOn(player.transform, 1.0f);
-
-		if (!canShoot) return;
-
 		//	弾発射
 		interval += Time.deltaTime;
 		if (interval >= 5) {

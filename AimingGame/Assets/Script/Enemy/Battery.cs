@@ -12,8 +12,6 @@ public class Battery : EnemyBase {
 
 	[SerializeField]GameObject bullet;
 
-	[SerializeField]bool canShoot;
-
 	//	Hoge
 	float interval = 0;
 
@@ -22,14 +20,13 @@ public class Battery : EnemyBase {
 		speed = 1.0f;
 		faceSpeed = 5.0f;
 
-		//	キャラコン取得
-		GetCharacterController();
+		//	あたり判定に必要なコンポーネントをコンポーネント
+		GetCollision();
 	}
 
 	// Update is called once per frame
 	void Update() {
 
-		if (!canShoot) return;
 		//	弾発射
 		interval += Time.deltaTime;
 		if (interval >= 5) {

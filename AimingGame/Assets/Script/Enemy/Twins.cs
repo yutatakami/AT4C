@@ -4,16 +4,46 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ComponentEx;
 
 /*
  * 双子の親　ジャマーの親
  */
 public class Twins : EnemyBase {
-	//	子の死亡
-	bool deadChild = false;
-	
+	//	member
+	float distance;	//	二機の距離格納用
+	Vector3 size;
+	public GameObject[] children = new GameObject[2];	//	←パブリックである必要はない
+
 	//	propaty 
 	public bool DeadChild{ get; set; }
+
+
+	private void Start() {
+
+		float hoge = 10.0f;
+
+		//	子の双子を配列で取得
+		children = ComponentEx.ComponentExtensions.GetChildren(this);
+
+		//	二人の距離をとる(ハート)
+		SetChildPosition(hoge);
+
+		//	2機間にダメージ判定を展開
+		CreateDamageBox(hoge * 2);
+	}
+
+
+	/*
+	 * 2機間のダメージ判定ボックス生成
+	 */
+	void CreateDamageBox(float boxsize) {
+		gameObject.AddComponent<BoxCollider>();
+		size = gameObject.GetComponent<BoxCollider>().size;
+		size.x = boxsize;
+		gameObject.GetComponent<BoxCollider>().size = size;
+	}
+
 
 	/*
 	 * ボルトエフェクトの解除
@@ -31,12 +61,21 @@ public class Twins : EnemyBase {
 
 
 	/*
+	 * 子の配置（親からのローカル座標指定）
+	 */
+	void SetChildPosition(float distance) {
+		children[0].transform.localPosition += new Vector3(distance, 0, 0);
+		children[1].transform.localPosition += new Vector3(-distance, 0, 0);
+	}
+
+
+	/*
 	 * 非アクティブになった時
 	 */
 	private void OnDisable() {
 
-		//	自身をリストから削除
-		ObjectManager.ObjectManager.Instance.list[SearchTag].Remove(gameObject);
+		//	破棄
+		Destroy(gameObject);
 
 	}
 
@@ -46,7 +85,10 @@ public class Twins : EnemyBase {
 	private void OnDestroy() {
 
 		//	自身をリストから削除
+		if (ObjectManager.ObjectManager.Instance == null) return;
 		ObjectManager.ObjectManager.Instance.list[SearchTag].Remove(gameObject);
 
 	}
+
+
 }

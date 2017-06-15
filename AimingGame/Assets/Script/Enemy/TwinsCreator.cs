@@ -12,19 +12,12 @@ public class TwinsCreator : MonoBehaviour {
 	GameObject twinsPrefab;
 	// アクティブの最大数
 	//[SerializeField]int maxEnemy = 2;
-	[SerializeField]
-	bool OneCreate;
 
 
 	// Use this for initialization
 	void Start() {
-		if (OneCreate) {
-			Create();
-		}
-		else {
-			// 周期的に実行したい場合はコルーチンを使うとよい
-			StartCoroutine(Exec());
-		}
+		// 周期的に実行したい場合はコルーチンを使うとよい
+		StartCoroutine(Exec());
 	}
 
 

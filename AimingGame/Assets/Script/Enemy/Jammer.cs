@@ -34,8 +34,8 @@ public class Jammer : EnemyBase {
 		//	エフェクトの曲がる回数をランダムでセット
 		BoltController.Generations = Random.Range(4, 8);
 
-		//	キャラコン取得
-		GetCharacterController();
+		//	あたり判定に必要なコンポーネントをコンポーネント
+		GetCollision();
 	}
 
 
@@ -45,8 +45,6 @@ public class Jammer : EnemyBase {
 	private void OnDisable() {
 		//	死んだ
 		isDead = true;
-		//	自身をリストから削除
-		ObjectManager.ObjectManager.Instance.list[SearchTag].Remove(gameObject);
 
 		//	親がいないなら処理しない
 		if (myParent == null) return;
@@ -65,6 +63,7 @@ public class Jammer : EnemyBase {
 	private void OnDestroy() {
 
 		//	自身をリストから削除
+		if (ObjectManager.ObjectManager.Instance == null) return;
 		ObjectManager.ObjectManager.Instance.list[SearchTag].Remove(gameObject);
 
 	}

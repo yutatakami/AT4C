@@ -9,6 +9,7 @@ public class EnemyBase : ObjectBase {
 
 	// CharacterController
 	protected CharacterController controller = null;
+	protected BoxCollider boxCollider = null;
 	
 	//	Enemy status
 	protected float vital;    //体力
@@ -33,6 +34,19 @@ public class EnemyBase : ObjectBase {
 	
 
 	//	Method
+
+	/*
+	 * あたり判定系貼り付け
+	 */
+	 public void GetCollision() {
+		//	BoxCollider取得
+		boxCollider = GetComponent<BoxCollider>();
+		if(boxCollider == null) {
+			//	無ければ付ける
+			gameObject.AddComponent<BoxCollider>();
+			boxCollider = GetComponent<BoxCollider>();
+		}
+	}
 
 	/*
 	 * CharacterControllerの取得
