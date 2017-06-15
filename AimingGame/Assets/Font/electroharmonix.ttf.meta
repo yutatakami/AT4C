@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 74a222bb29f7d2b478768a6a644e6707
+timeCreated: 1495895862
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Electroharmonix
+  fontNames:
+  - Electroharmonix
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

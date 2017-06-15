@@ -39,31 +39,14 @@ public class InputManager : SingletonMonoBehaviour<InputManager>
 #if UNITY_EDITOR
         if (Input.GetMouseButtonDown(0))
         {
-            startPosition = Input.mousePosition;
-            startPosition.z = 303.0f;
-            Debug.Log("始点position : " + startPosition);
-            // 調整
-            startPosition = Camera.main.ScreenToWorldPoint(startPosition);
-            //startPosition = new Vector2(startPosition.x - Screen.width / 2, startPosition.y - Screen.height / 2);
-            Debug.Log("始点position : " + startPosition);
+            startPosition = prevPosition = Input.mousePosition;
         }
 
         if (Input.GetMouseButton(0))
         {
             prevPosition = Input.mousePosition;
-            prevPosition.z = 303.0f;
-            //Debug.Log("終点position" + startPosition);
-            // 調整
-            prevPosition = Camera.main.ScreenToWorldPoint(prevPosition);
-            //prevPosition = new Vector2(prevPosition.x - Screen.width / 2, prevPosition.y - Screen.height / 2);
             direction = prevPosition - startPosition;
             distance = Vector3.Distance(prevPosition, startPosition);
-            //Debug.Log("終点position" + startPosition);
-        }
-        else
-        {
-            direction = Vector3.zero;
-            distance = 0.0f;
         }
 #else
         // タッチしたら
@@ -79,8 +62,8 @@ public class InputManager : SingletonMonoBehaviour<InputManager>
                 case TouchPhase.Began:
                     // 始点の座標を取得
                     startPosition = prevPosition = touch.position;
-                    startPosition.z = prevPosition.z = 303.0f;
-                    startPosition = prevPosition = Camera.main.ScreenToWorldPoint(startPosition);
+                    //startPosition.z = prevPosition.z = 303.0f;
+                    //startPosition = prevPosition = Camera.main.ScreenToWorldPoint(startPosition);
 
                     
                     // 始点からの方向ベクトルを求める
@@ -95,8 +78,8 @@ public class InputManager : SingletonMonoBehaviour<InputManager>
                 case TouchPhase.Moved:
                     // 現在の座標を取得
                     prevPosition = touch.position;
-                    prevPosition.z = 303.0f;
-                    prevPosition = Camera.main.ScreenToWorldPoint(prevPosition);
+                    //prevPosition.z = 303.0f;
+                    //prevPosition = Camera.main.ScreenToWorldPoint(prevPosition);
 
                     // 始点からの方向ベクトルを求める
                     direction = prevPosition - startPosition;
@@ -138,6 +121,7 @@ public class InputManager : SingletonMonoBehaviour<InputManager>
 #endif
     }
 
+
     /// <summary>
     /// タッチした時
     /// </summary>
@@ -163,6 +147,7 @@ public class InputManager : SingletonMonoBehaviour<InputManager>
 #endif
     }
 
+
     /// <summary>
     /// 動いている時
     /// </summary>
@@ -178,6 +163,7 @@ public class InputManager : SingletonMonoBehaviour<InputManager>
         }
         return false;
     }
+
 
     /// <summary>
     /// 離した時
@@ -205,17 +191,17 @@ public class InputManager : SingletonMonoBehaviour<InputManager>
     }
 
     // Getter--------------------------------------------------------
-    public Vector2 GetStartPos()
+    public Vector3 GetStartPos()
     {
         return startPosition;
     }
 
-    public Vector2 GetPrevPos()
+    public Vector3 GetPrevPos()
     {
         return prevPosition;
     }
 
-    public Vector2 GetDirection()
+    public Vector3 GetDirection()
     {
         return direction;
     }
