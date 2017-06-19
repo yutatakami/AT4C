@@ -31,7 +31,7 @@ namespace ObjectManager {
 					instance = (ObjectManager)FindObjectOfType(typeof(ObjectManager));
 
 					if (instance == null) {
-						Debug.LogError(typeof(ObjectManager) + "is nothing");
+						//Debug.LogError(typeof(ObjectManager) + "is nothing");
 					}
 				}
 

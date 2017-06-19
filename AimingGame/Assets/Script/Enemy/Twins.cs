@@ -57,6 +57,8 @@ public class Twins : EnemyBase {
 			Destroy(child.GetComponent<DigitalRuby.LightningBolt.LightningBoltScript>());
 			Destroy(child.GetComponent<LineRenderer>());
 		}
+		//	ボルトのあたり判定を削除
+		Destroy(gameObject.GetComponent<BoxCollider>());
 	}
 
 

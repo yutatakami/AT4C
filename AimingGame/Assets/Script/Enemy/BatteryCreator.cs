@@ -14,7 +14,8 @@ public class BatteryCreator : MonoBehaviour {
 	// Use this for initialization
 	void Start() {
 		// 周期的に実行したい場合はコルーチンを使うとよい
-		StartCoroutine(Exec());
+		//StartCoroutine(Exec());
+		Create();
 	}
 	
 

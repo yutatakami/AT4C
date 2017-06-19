@@ -10,6 +10,7 @@ public class EnemyBase : ObjectBase {
 	// CharacterController
 	protected CharacterController controller = null;
 	protected BoxCollider boxCollider = null;
+	protected Rigidbody rb = null;
 	
 	//	Enemy status
 	protected float vital;    //体力
@@ -46,6 +47,15 @@ public class EnemyBase : ObjectBase {
 			gameObject.AddComponent<BoxCollider>();
 			boxCollider = GetComponent<BoxCollider>();
 		}
+
+		//	Rigidbody取得
+		rb = GetComponent<Rigidbody>();
+		if(rb == null) {
+			//	無ければ付ける
+			gameObject.AddComponent<Rigidbody>();
+			rb = GetComponent<Rigidbody>();
+		}
+		rb.mass = 0.1f;	//	これやばいああああああああああああああああああああああああああああああああああああああああああああああ　
 	}
 
 	/*
