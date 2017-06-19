@@ -25,9 +25,8 @@ public class wireDestroy : MonoBehaviour {
     {
         Debug.Log(other.name + "に当たった");
         if (other.transform.tag == "Player") {
-            Debug.Log("プレイヤーに当たった");
-            wM.WireAllDelete();
             charaMove.InitFlg();
+            wM.WireAllDelete();
         }
     }
 

@@ -30,7 +30,6 @@ public class Player : ObjectBase {
     // Update is called once per frame
     void Update()
     {
-
         if (controller.isGrounded)
         {
             // ラインを引き終わったら
@@ -43,17 +42,17 @@ public class Player : ObjectBase {
                 frad += 0.5f;
                 frad = frad * Mathf.Deg2Rad;
 
-                position = new Vector3(centerPos.x + Lenght * Mathf.Cos(1 * Mathf.Deg2Rad), 
-                    gameObject.transform.position.y, centerPos.z + Lenght * Mathf.Sin(1 * Mathf.Deg2Rad));
-                position = Vector3.Normalize(position);
+                position = new Vector3(centerPos.x + Lenght * Mathf.Cos(frad), 
+                    gameObject.transform.position.y, centerPos.z + Lenght * Mathf.Sin(frad));
 
-                // 入力値にカメラのオイラー格をかけることで、カメラの角度に応じた移動方向に補正する
-                moveDirection = Quaternion.Euler(0.0f, cameraobj.transform.localEulerAngles.y, 0.0f) *
-                    new Vector3(position.x, 0.0f, position.z);
-                // 移動方向をローカルからワールド空間に変換
-                moveDirection = transform.TransformDirection(moveDirection);
-                // 移動速度をかける
-                moveDirection *= speed;
+                gameObject.transform.position = position;
+                //// 入力値にカメラのオイラー格をかけることで、カメラの角度に応じた移動方向に補正する
+                //moveDirection = Quaternion.Euler(0.0f, cameraobj.transform.localEulerAngles.y, 0.0f) *
+                //    new Vector3(position.x, 0.0f, position.z);
+                //// 移動方向をローカルからワールド空間に変換
+                //moveDirection = transform.TransformDirection(moveDirection);
+                //// 移動速度をかける
+                //moveDirection *= speed;
             }
             else {
                 // 入力値にカメラのオイラー格をかけることで、カメラの角度に応じた移動方向に補正する

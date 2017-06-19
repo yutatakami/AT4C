@@ -86,7 +86,7 @@ public class wireManager : MonoBehaviour
         Wire = new CWire();
         Wire.rendererPos = new CRendererPosition();
 
-        // ワイヤー用ゲームオブジェクト生成(空)
+        // ワイヤー用ゲームオブジェクト生成
         Wire.WireObj = ObjectManager.ObjectPool.Instance.GetGameObject(WirePrefab,
             Vector3.zero, Quaternion.identity);
 
@@ -96,6 +96,10 @@ public class wireManager : MonoBehaviour
         Wire.Point = Wire.WireObj.transform.FindChild("Linepoint").gameObject;
 
         // 初期化
+        Wire.WireObj.transform.position = Vector3.zero;
+        Wire.WireObj.transform.rotation = Quaternion.identity;
+        Wire.WireObj.transform.localScale = new Vector3(1f, 1f, 1f);
+
         Wire.Cylinder.SetActive(false);
         Wire.Point.SetActive(false);
         BoxCollider BoxCol = Wire.Point.GetComponent<BoxCollider>();
@@ -104,6 +108,7 @@ public class wireManager : MonoBehaviour
         if (LNum % 2 == 0) {
             // 始点設定
             Wire.rendererPos.StartPosition = PlayerPosition;
+            Wire.rendererPos.StartPosition.y = 1.0f;
             // ラインの長さ設定
             LimitLeg = BASICLINELEG;
             // フラグを下す
@@ -155,12 +160,13 @@ public class wireManager : MonoBehaviour
         if (NowLeg > LimitLeg　|| bSecondLine) {
             Wire.rendererPos.EndPosition = new Vector3(
                 Wire.rendererPos.StartPosition.x + LimitLeg * Mathf.Cos(rad),
-                Wire.rendererPos.StartPosition.y,
+                1.0f,
                 Wire.rendererPos.StartPosition.z + LimitLeg * Mathf.Sin(rad));
             NowLeg = LimitLeg;
         }
         else {
             Wire.rendererPos.EndPosition = touchPos;
+            Wire.rendererPos.EndPosition.y = 1.0f;
         }
 
         // 雷の終点を設定
@@ -188,8 +194,13 @@ public class wireManager : MonoBehaviour
         Wire.Bolt.enabled = false;
         // ワイヤーを表示
         Wire.Cylinder.SetActive(true);
-        Wire.Cylinder.transform.LookAt(Wire.Point.transform);
+        // 終点の方向を向かせる
         Wire.Cylinder.transform.position = Wire.rendererPos.StartPosition;
+
+        Quaternion defaultRotation = Wire.Cylinder.transform.localRotation;
+        Wire.Cylinder.transform.LookAt(Wire.Point.transform);
+        Wire.Cylinder.transform.localRotation *= defaultRotation;
+
         // ワイヤーを伸ばすコルーチンを呼ぶ
         StretchingWire SW = Wire.Cylinder.GetComponent<StretchingWire>();
         SW.Stretch(Wire.Cylinder, Wire.Cylinder.transform.position, LimitLeg, rad);
@@ -211,7 +222,6 @@ public class wireManager : MonoBehaviour
         }
         // リストに追加
         wireList.Add(Wire);
-
     }
 
 
@@ -219,40 +229,40 @@ public class wireManager : MonoBehaviour
     /// ラインを削除
     /// </summary>
     /// <param name="id">要素数</param>
-    public void WireDelete(int id)
-    {
-        int isActive = 0;
+    //public void WireDelete(int id)
+    //{
+    //    int isActive = 0;
 
-        // タグが付いたオブジェクトリストを取得
-        List<GameObject> List = ObjectManager.ObjectManager.Instance.ByTag(Search.Tags.Line);
-        // リストが空
-        if (List == null) {
-            return;
-        }
+    //    // タグが付いたオブジェクトリストを取得
+    //    List<GameObject> List = ObjectManager.ObjectManager.Instance.ByTag(Search.Tags.Line);
+    //    // リストが空
+    //    if (List == null) {
+    //        return;
+    //    }
 
-        // ID番目のワイヤーオブジェクトを解放
-        ObjectManager.ObjectPool.Instance.ReleaseGameObject(wireList[id].WireObj);
+    //    // ID番目のワイヤーオブジェクトを解放
+    //    ObjectManager.ObjectPool.Instance.ReleaseGameObject(wireList[id].WireObj);
 
-        // アクティブtrueのオブジェクトを数える
-        foreach(GameObject obj in List) {
-            if (!obj.active) continue;
-            isActive++;
-        }
-        // アクティブ0だと初期化
-        if (isActive == 0) {
-            // プレイヤーの子に入っているワイヤーのオブジェクトをPoolに返す
-            foreach (Transform child in transform) {
-                if (child.tag != "wire") continue;
+    //    // アクティブtrueのオブジェクトを数える
+    //    foreach(GameObject obj in List) {
+    //        if (!obj.active) continue;
+    //        isActive++;
+    //    }
+    //    // アクティブ0だと初期化
+    //    if (isActive == 0) {
+    //        // プレイヤーの子に入っているワイヤーのオブジェクトをPoolに返す
+    //        foreach (Transform child in transform) {
+    //            if (child.tag != "wire") continue;
 
-                child.parent = ObjectManager.ObjectPool.Instance.transform;
-            }
+    //            child.parent = ObjectManager.ObjectPool.Instance.transform;
+    //        }
 
-            wireList.Clear();
-            LNum = 0;
-            bWireMax = false;
-        }
+    //        wireList.Clear();
+    //        LNum = 0;
+    //        bWireMax = false;
+    //    }
 
-    }
+    //}
 
 
     /// <summary>
@@ -265,12 +275,6 @@ public class wireManager : MonoBehaviour
 
         // リストが空
         if (List == null) return;
-        // リスト内のオブジェクトを解放(削除ではなくアクティブをfalseにする)
-        foreach (GameObject obj in List) {
-            if (!obj.active) continue;
-            // 解放
-            ObjectManager.ObjectPool.Instance.ReleaseGameObject(obj);
-        }
 
         // プレイヤーの子に入っているワイヤーのオブジェクトをPoolに返す
         foreach(Transform child in transform) {
@@ -278,12 +282,43 @@ public class wireManager : MonoBehaviour
 
             child.parent = ObjectManager.ObjectPool.Instance.transform;
         }
+
+        // 使用したオブジェクトを初期化
+        foreach(CWire wire in wireList) {
+            wire.WireObj.transform.position = Vector3.zero;
+            wire.WireObj.transform.rotation = Quaternion.identity;
+
+            wire.Bolt.StartObject = null;
+            wire.Bolt.EndObject = null;
+            wire.Bolt.StartPosition = Vector3.zero;
+            wire.Bolt.EndPosition = Vector3.zero;
+            LineRenderer renderer = wire.WireObj.GetComponent<LineRenderer>();
+            renderer.enabled = true;
+            wire.Bolt.enabled = true;
+
+            wire.Cylinder.transform.position = Vector3.zero;
+            wire.Cylinder.transform.rotation = Quaternion.identity;
+            wire.Cylinder.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+
+            wire.Point.transform.position = Vector3.zero;
+
+            wire.rendererPos.StartPosition = Vector3.zero;
+            wire.rendererPos.EndPosition = Vector3.zero;
+        }
+
+        // リスト内のオブジェクトを解放(削除ではなくアクティブをfalseにする)
+        foreach (GameObject obj in List) {
+            if (!obj.active) continue;
+            // 解放
+            ObjectManager.ObjectPool.Instance.ReleaseGameObject(obj);
+        }
+
         // 解放
         wireList.Clear();
+        Wire = null;
         LNum = 0;
         bWireMax = false;
     }
-
 
 
     /// <summary>

@@ -42,7 +42,7 @@ public class StretchingWire : MonoBehaviour {
         while(NowLength <= Length / 2) {
             NowLength += STRETCHSPEED;
             cylinder.transform.localScale = new Vector3(cylinder.transform.localScale.x,
-                cylinder.transform.localScale.y, NowLength);
+                cylinder.transform.localScale.y, NowLength * 2);
             cylinder.transform.position = new Vector3(
                 Position.x + NowLength * Mathf.Cos(Angle),
                 Position.y,
@@ -51,8 +51,8 @@ public class StretchingWire : MonoBehaviour {
             yield return endFrame;
         }
 
-        //cylinder.transform.localScale = new Vector3(cylinder.transform.localScale.x,
-        //    cylinder.transform.localScale.y, Length);
+        cylinder.transform.localScale = new Vector3(cylinder.transform.localScale.x,
+            cylinder.transform.localScale.y, Length);
         cylinder.transform.position = new Vector3(
             Position.x + Length / 2 * Mathf.Cos(Angle),
             Position.y,
