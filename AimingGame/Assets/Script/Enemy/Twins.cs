@@ -42,6 +42,9 @@ public class Twins : EnemyBase {
 		size = gameObject.GetComponent<BoxCollider>().size;
 		size.x = boxsize;
 		gameObject.GetComponent<BoxCollider>().size = size;
+
+		//	通り抜ける
+		gameObject.GetComponent<BoxCollider>().isTrigger = true;
 	}
 
 
@@ -93,4 +96,16 @@ public class Twins : EnemyBase {
 	}
 
 
+	/*
+	 * ダメージボックスの判定
+	 */
+	private void OnTriggerEnter(Collider other) {
+
+		switch (other.gameObject.tag) {
+			case "Player":
+				//TODO: プレイヤーのストックを減らす的な処理
+				//		三回ルールです。
+				break;
+		}
+	}
 }

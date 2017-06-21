@@ -35,7 +35,7 @@ public class BatteryCreator : MonoBehaviour {
 		//ObjectPool.Instance.GetGameObject(enemyPrefab, Vector3.zero, Quaternion.identity);
 
 		//	ランダム（仮）後で消す
-		Vector3 pos = new Vector3(Random.Range(-10.0f,10.0f),0.1f, Random.Range(-10.0f, 10.0f));
+		Vector3 pos = new Vector3(Random.Range(-10.0f,10.0f),1.0f, Random.Range(-10.0f, 10.0f));
 		ObjectManager.ObjectPool.Instance.GetGameObject(batteryPrefab, pos, Quaternion.identity);
 	}
 

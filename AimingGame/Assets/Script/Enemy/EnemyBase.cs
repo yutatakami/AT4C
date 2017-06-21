@@ -9,13 +9,19 @@ public class EnemyBase : ObjectBase {
 
 	// CharacterController
 	protected CharacterController controller = null;
+
+	//	BoxCollider
 	protected BoxCollider boxCollider = null;
+
+	//	Rigidbody
 	protected Rigidbody rb = null;
 	
 	//	Enemy status
 	protected float vital;    //体力
 	protected float speed;    //移動速度
-	protected float faceSpeed;	//	振り向きの速度
+	protected float faceSpeed;  //	振り向きの速度
+	protected bool isHitFirst = false;	//	一本目のワイヤーにあたった
+	protected bool isHitSecond = false;	//	二本目のワイヤーにあたった
 
 	// Property
 	public float Vital {
@@ -55,8 +61,15 @@ public class EnemyBase : ObjectBase {
 			gameObject.AddComponent<Rigidbody>();
 			rb = GetComponent<Rigidbody>();
 		}
-		rb.mass = 0.1f;	//	これやばいああああああああああああああああああああああああああああああああああああああああああああああ　
+		rb.mass = 0.1f; //	これやばいああああああああああああああああああああああああああああああああああああああああああああああ
+
+		//	constrainsの設定。
+		rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
+
+		//	
+		rb.useGravity = false;
 	}
+	
 
 	/*
 	 * CharacterControllerの取得
