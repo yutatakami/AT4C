@@ -15,11 +15,17 @@ public class Decided : EnemyBase {
 
 	//	Hoge
 	float interval = 0;
+	public bool shoot = false;
+	public bool move = false;
+	Vector3 startPos;
+
 
 	// Use this for initialization
 	void Start () {
 		speed = 1.0f;
 		faceSpeed = 5.0f;
+
+		startPos = transform.position;
 
 		//	あたり判定に必要なコンポーネントをコンポーネント
 		GetCollision();
@@ -31,14 +37,16 @@ public class Decided : EnemyBase {
 		var player = ObjectManager.ObjectManager.Instance.SearchPlayer();
 
 		//	移動
-		HogeMovePattern(5.0f);
+		if(move)
+			HogeMovePattern(2.0f);	//	移動量
 		//	角度
 		LockOn(player.transform, 1.0f);
 		//	弾発射
 		interval += Time.deltaTime;
 		if (interval >= 5) {
 			interval = 0;
-			Shoot();
+			if(shoot)
+				Shoot();
 		}
 	}
 
@@ -48,7 +56,7 @@ public class Decided : EnemyBase {
 	 */
 	void HogeMovePattern(float r) {
 		var pos = transform.position;
-		pos.x = r * Mathf.Cos(Time.time);
+		pos.x = startPos.x + r * Mathf.Cos(Time.time);
 		transform.position = pos;
 	}
 
@@ -99,6 +107,18 @@ public class Decided : EnemyBase {
 				isHitSecond = false;
 				break;
 		}
+
+	}
+
+
+	/*
+	 * 死亡時
+	 */
+	private void OnDisable() {
+
+		//	音再生
+		if (Sound_Manager.Instance)
+			Sound_Manager.Instance.PlaySE("SE003");
 
 	}
 }

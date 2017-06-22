@@ -50,7 +50,8 @@ public class Sound_Manager : SingletonMonoBehaviour<Sound_Manager>
         // サウンド登録("Resoueces/Sounds フォルダ直下に置く")
         Clips.Add( "SE001",  new AudioClipInfo( "tama",   "SE001" ) );
         Clips.Add( "SE002",  new AudioClipInfo( "cancel", "SE002" ) );
-        Clips.Add( "BGM001", new AudioClipInfo( "bgm001", "BGM001" ) );
+		Clips.Add( "SE003",  new AudioClipInfo( "nc30950", "SE003"));
+		Clips.Add( "BGM001", new AudioClipInfo( "bgm001", "BGM001" ) );
         Clips.Add( "BGM002", new AudioClipInfo( "bgm002", "BGM002" ) );
     }
 

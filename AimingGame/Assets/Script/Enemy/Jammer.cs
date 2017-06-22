@@ -38,7 +38,7 @@ public class Jammer : EnemyBase {
 		GetCollision();
 
 		//	動く物体にぶつかっても動かない
-		rb.constraints = RigidbodyConstraints.FreezePosition;
+		rb.constraints = RigidbodyConstraints.FreezePositionY;
 	}
 
 
@@ -55,6 +55,10 @@ public class Jammer : EnemyBase {
 		//	親に死んだことを知らせる
 		myParent.GetComponent<Twins>().DeadChild = isDead;
 		myParent.GetComponent<Twins>().RemoveBolt();
+
+		//	音再生
+		if (Sound_Manager.Instance)
+			Sound_Manager.Instance.PlaySE("SE003");
 
 		//	破棄
 		Destroy(gameObject);
@@ -112,4 +116,6 @@ public class Jammer : EnemyBase {
 		}
 
 	}
+	
+
 }

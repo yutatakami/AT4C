@@ -13,7 +13,9 @@ public class Twins : EnemyBase {
 	//	member
 	float distance;	//	二機の距離格納用
 	Vector3 size;
-	public GameObject[] children = new GameObject[2];	//	←パブリックである必要はない
+	public GameObject[] children = new GameObject[2];   //	←パブリックである必要はない
+
+	public float Kyori;
 
 	//	propaty 
 	public bool DeadChild{ get; set; }
@@ -21,7 +23,7 @@ public class Twins : EnemyBase {
 
 	private void Start() {
 
-		float hoge = 10.0f;
+		float hoge = Kyori;
 
 		//	子の双子を配列で取得
 		children = ComponentEx.ComponentExtensions.GetChildren(this);

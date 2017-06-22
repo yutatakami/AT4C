@@ -53,6 +53,14 @@ public class EnemyBase : ObjectBase {
 			gameObject.AddComponent<BoxCollider>();
 			boxCollider = GetComponent<BoxCollider>();
 		}
+		//	リファクタリング対象-------------------------------------------------------------------------------
+		var size = boxCollider.size;
+		size.y = 5;
+		boxCollider.size = size;
+		size = boxCollider.center;
+		size.y = 2.5f;
+		boxCollider.center = size;
+		//	リファクタリング対象--------------------------------------------------------------------------------
 
 		//	Rigidbody取得
 		rb = GetComponent<Rigidbody>();
@@ -62,6 +70,7 @@ public class EnemyBase : ObjectBase {
 			rb = GetComponent<Rigidbody>();
 		}
 		rb.mass = 0.1f; //	これやばいああああああああああああああああああああああああああああああああああああああああああああああ
+		rb.drag = 5;
 
 		//	constrainsの設定。
 		rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
@@ -135,5 +144,8 @@ public class EnemyBase : ObjectBase {
 
 		return velocity;
 	}
+
+
+
 
 }

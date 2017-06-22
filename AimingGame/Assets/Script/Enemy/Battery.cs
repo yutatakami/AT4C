@@ -15,6 +15,7 @@ public class Battery : EnemyBase {
 
 	//	Hoge
 	float interval = 0;
+	public bool shoot = false;
 
 	// Use this for initialization
 	void Start () {
@@ -32,7 +33,8 @@ public class Battery : EnemyBase {
 		interval += Time.deltaTime;
 		if (interval >= 5) {
 			interval = 0;
-			Shoot();
+			if(shoot)
+				Shoot();
 		}
 	}
 
@@ -82,6 +84,18 @@ public class Battery : EnemyBase {
 				isHitSecond = false;
 				break;
 		}
+
+	}
+
+
+	/*
+	 * 死亡時
+	 */
+	private void OnDisable() {
+
+		//	音再生
+		if(Sound_Manager.Instance)
+			Sound_Manager.Instance.PlaySE("SE003");
 
 	}
 }
