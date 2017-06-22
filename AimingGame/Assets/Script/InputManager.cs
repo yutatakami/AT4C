@@ -1,12 +1,38 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class InputManager : SingletonMonoBehaviour<InputManager>
 {
-    Vector3 startPosition;  // 始点の座標
-    Vector3 prevPosition;   // 現在の座標
-    Vector3 direction;      // 方向ベクトル
+    UnityEvent onTouchBegin;
+    public UnityEvent OnTouchBegin
+    {
+        get { return onTouchBegin; }
+    }
+
+    UnityEvent onTouchMove;
+    public UnityEvent OnTouchMove
+    {
+        get { return onTouchMove; }
+    }
+
+    UnityEvent onTouchStay;
+    public UnityEvent OnTouchStay
+    {
+        get { return onTouchStay; }
+    }
+
+    UnityEvent onTouchEnd;
+    public UnityEvent OnTouchEnd
+    {
+        get { return onTouchEnd; }
+    }
+
+    Vector2 startPosition;  // 始点の座標
+    Vector2 prevPosition;   // 現在の座標
+    Vector2 direction;      // 方向ベクトル
     float distance;         // 長さ
     bool touched;           // タッチしているか
 
@@ -19,15 +45,21 @@ public class InputManager : SingletonMonoBehaviour<InputManager>
         }
 
         DontDestroyOnLoad(this.gameObject);
+
+        // イベントの初期化
+        onTouchBegin = new UnityEvent();
+        onTouchMove = new UnityEvent();
+        onTouchStay = new UnityEvent();
+        onTouchEnd = new UnityEvent();
     }
 
     // Use this for initialization
     void Start()
     {
         // 変数の初期化
-        startPosition = Vector3.zero;
-        prevPosition = Vector3.zero;
-        direction = Vector3.zero;
+        startPosition = Vector2.zero;
+        prevPosition = Vector2.zero;
+        direction = Vector2.zero;
         distance = 0.0f;
         touched = false;
     }
@@ -40,18 +72,26 @@ public class InputManager : SingletonMonoBehaviour<InputManager>
         if (Input.GetMouseButtonDown(0))
         {
             startPosition = prevPosition = Input.mousePosition;
-            startPosition.z = prevPosition.z = Mathf.Abs(Camera.main.transform.position.y);
-            startPosition = Camera.main.ScreenToWorldPoint(startPosition);
-            prevPosition = Camera.main.ScreenToWorldPoint(prevPosition);
+            onTouchBegin.Invoke();
         }
 
         if (Input.GetMouseButton(0))
         {
-            prevPosition = Input.mousePosition;
-            prevPosition.z = Mathf.Abs(Camera.main.transform.position.y);
-            prevPosition = Camera.main.ScreenToWorldPoint(prevPosition);
-            direction = prevPosition - startPosition;
-            distance = Vector3.Distance(prevPosition, startPosition);
+            Vector2 position = Input.mousePosition;
+
+            if ((position - prevPosition).magnitude > 1.0f) {
+                prevPosition = Input.mousePosition;
+                direction = prevPosition - startPosition;
+                distance = Vector2.Distance(prevPosition, startPosition);
+                onTouchMove.Invoke();
+            }
+            else {
+                onTouchStay.Invoke();
+            }
+        }
+
+        if (Input.GetMouseButtonUp(0)) {
+            onTouchEnd.Invoke();
         }
 #else
         // タッチしたら
@@ -74,9 +114,11 @@ public class InputManager : SingletonMonoBehaviour<InputManager>
                     // 始点からの方向ベクトルを求める
                     direction = prevPosition - startPosition;
                     // 始点から現在の座標までの長さを求める
-                    distance = Vector3.Distance(touch.position, startPosition);
+                    distance = Vector2.Distance(touch.position, startPosition);
 
                     touched = true;
+
+                    onTouchBegin.Invoke();
                     break;
 
                 // 動いている
@@ -89,16 +131,21 @@ public class InputManager : SingletonMonoBehaviour<InputManager>
                     // 始点からの方向ベクトルを求める
                     direction = prevPosition - startPosition;
                     // 始点から現在の座標までの長さを求める
-                    distance = Vector3.Distance(touch.position, startPosition);
+                    distance = Vector2.Distance(touch.position, startPosition);
+
+                    onTouchMove.Invoke();
                     break;
 
                 // タッチしているが動いていない
                 case TouchPhase.Stationary:
+                    onTouchStay.Invoke();
                     break;
 
                 // 離れた
                 case TouchPhase.Ended:
                     touched = false;
+
+                    onTouchEnd.Invoke();
                     break;
             }
         }
@@ -171,6 +218,35 @@ public class InputManager : SingletonMonoBehaviour<InputManager>
 
 
     /// <summary>
+    /// 動いていない時
+    /// </summary>
+    /// <returns></returns>
+    public bool Stay ()
+    {
+        // デバック
+#if UNITY_EDITOR
+        if (Input.GetMouseButton(0)) {
+            Vector2 position = Input.mousePosition;
+
+            if ((position - prevPosition).magnitude < 1.0f) {
+                return true;
+            }
+        }
+        return false;
+#else
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+
+            if (touch.phase == TouchPhase.Stationary)
+                return true;
+        }
+        return false;
+#endif
+    }
+
+
+    /// <summary>
     /// 離した時
     /// </summary>
     /// <returns>ture:した false:していない</returns>
@@ -196,17 +272,17 @@ public class InputManager : SingletonMonoBehaviour<InputManager>
     }
 
     // Getter--------------------------------------------------------
-    public Vector3 GetStartPos()
+    public Vector2 GetStartPos()
     {
         return startPosition;
     }
 
-    public Vector3 GetPrevPos()
+    public Vector2 GetPrevPos()
     {
         return prevPosition;
     }
 
-    public Vector3 GetDirection()
+    public Vector2 GetDirection()
     {
         return direction;
     }

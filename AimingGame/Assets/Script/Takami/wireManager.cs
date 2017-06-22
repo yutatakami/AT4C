@@ -21,26 +21,36 @@ public class wireManager : MonoBehaviour
         public CRendererPosition rendererPos;   // レンダラー座標
     }
 
+    PlayerCtrl _plyaerCtrl;     // 
+
     List<CWire> wireList;       // ワイヤーリスト
-    CWire       Wire;           // ワイヤー
-    Vector3     PlayerPosition; // 自機座標
-    float       LimitLeg;       // 最大値
-    float       NowLeg;         // ラインの長さ
-    int         LNum;           // ライン数カウント
-    bool        bWireMax;       // 最大数を超えたとき
-    bool        bSecondLine;    // 二つ目のライン
+    CWire Wire;                 // ワイヤー
+    Vector3 PlayerPosition;     // 自機座標
+    float Angle;                // 角度
+    float LimitLeg;             // 最大値
+    float NowLeg;               // ラインの長さ
+    int LNum;                   // ライン数カウント
+    bool bWireMax;              // 最大数を超えたとき
+    bool bSecondLine;           // 二つ目のライン
+    bool Pulled;                // 線を引いているか
 
     [SerializeField]
     GameObject WirePrefab;  // ワイヤープレファブ
     [SerializeField]
+    GameCamera gameCamera;  // ゲームカメラ
+    [SerializeField]
     float BASICLINELEG; // 線の最長
     [SerializeField]
     int LineNum;        // ラインの数
+    [SerializeField]
+    float ScreenRatio;  // スクリーンの比率
 
 
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start ()
     {
+        _plyaerCtrl = gameObject.GetComponent<PlayerCtrl>();
+
         // 初期化
         wireList = new List<CWire>();
         Wire = null;
@@ -50,20 +60,31 @@ public class wireManager : MonoBehaviour
         LNum = 0;
         bWireMax = false;
         bSecondLine = false;
-	}
+        Pulled = false;
+    }
 
     // Update is called once per frame
     void Update ()
     {
         // 自機の座標を取得
         PlayerPosition = gameObject.transform.position;
-        // タッチしたら
-        if (InputManager.Instance.Bigan()) {
-            // ワイヤー生成
-            WireCreate();
+/*
+        if (!bWireMax) {
+            // タッチしたら
+            if (InputManager.Instance.Bigan()) {
+                // ワイヤー生成
+                WireCreate();
+            }
         }
-
         // 引き終わったら一斉に雷を表示
+        else {
+            foreach (CWire obj in wireList) {
+                LineRenderer renderer = obj.WireObj.GetComponent<LineRenderer>();
+                renderer.enabled = true;
+                obj.Bolt.enabled = true;
+            }
+        }
+*/
         if (bWireMax) {
             foreach (CWire obj in wireList) {
                 LineRenderer renderer = obj.WireObj.GetComponent<LineRenderer>();
@@ -80,7 +101,7 @@ public class wireManager : MonoBehaviour
     /// <summary>
     /// ワイヤー生成
     /// </summary>
-    void WireCreate ()
+    public void WireCreate ()
     {
         // 初期化
         Wire = new CWire();
@@ -111,8 +132,11 @@ public class wireManager : MonoBehaviour
             Wire.rendererPos.StartPosition.y = 1.0f;
             // ラインの長さ設定
             LimitLeg = BASICLINELEG;
-            // フラグを下す
+            // フラグを設定
             bSecondLine = false;
+            Pulled = true;
+            // タグをつける
+            Wire.Cylinder.tag = "First";
         }
         else {
             // 始点設定
@@ -121,6 +145,8 @@ public class wireManager : MonoBehaviour
             LimitLeg = NowLeg;
             // フラグを立てる
             bSecondLine = true;
+            // タグをつける
+            Wire.Cylinder.tag = "Second";
         }
         // 雷の始点設定
         Wire.Bolt.StartPosition = Wire.rendererPos.StartPosition;
@@ -147,27 +173,34 @@ public class wireManager : MonoBehaviour
             Wire.Point.SetActive(true);
         }
 
-        // タッチした座標を取得
-        Vector3 touchPos = InputManager.Instance.GetPrevPos();
-        // 線の長さを求める
-        NowLeg = Vector3.Distance(Wire.rendererPos.StartPosition, touchPos);
+        // ベクトルと長さ取得
+        Vector2 vec = InputManager.Instance.GetDirection();
+        vec = vec * ScreenRatio;
+        NowLeg = InputManager.Instance.GetDistance();
+        NowLeg = NowLeg * ScreenRatio;
+
+        // 移動後の座標を求める
+        Vector3 position = new Vector3(Wire.rendererPos.StartPosition.x + vec.x,
+                Wire.rendererPos.StartPosition.y,
+                Wire.rendererPos.StartPosition.z + vec.y);
 
         // 角度を求める
-        float rad = Mathf.Atan2((touchPos.z - Wire.rendererPos.StartPosition.z),
-            (touchPos.x - Wire.rendererPos.StartPosition.x));
+        Angle = Mathf.Atan2((position.z - Wire.rendererPos.StartPosition.z),
+            (position.x - Wire.rendererPos.StartPosition.x));
 
         // 求めた長さが限界値を超えていたら
         if (NowLeg > LimitLeg　|| bSecondLine) {
             Wire.rendererPos.EndPosition = new Vector3(
-                Wire.rendererPos.StartPosition.x + LimitLeg * Mathf.Cos(rad),
-                1.0f,
-                Wire.rendererPos.StartPosition.z + LimitLeg * Mathf.Sin(rad));
+                Wire.rendererPos.StartPosition.x + LimitLeg * Mathf.Cos(Angle),
+                Wire.rendererPos.StartPosition.y,
+                Wire.rendererPos.StartPosition.z + LimitLeg * Mathf.Sin(Angle));
             NowLeg = LimitLeg;
         }
         else {
-            Wire.rendererPos.EndPosition = touchPos;
-            Wire.rendererPos.EndPosition.y = 1.0f;
+            Wire.rendererPos.EndPosition = position;
         }
+
+
 
         // 雷の終点を設定
         Wire.Bolt.EndPosition = Wire.rendererPos.EndPosition;
@@ -177,16 +210,16 @@ public class wireManager : MonoBehaviour
         Wire.Point.transform.position = pos;
 
         // 離したら
-        if (InputManager.Instance.Ended()) {
-            WirepostUpdata(rad);
-        }
+        //if (InputManager.Instance.Ended()) {
+        //    WirepostUpdata();
+        //}
     }
 
 
     /// <summary>
     /// 後処理
     /// </summary>
-    void WirepostUpdata(float rad)
+    public void WirepostUpdata()
     {
         // 雷を消す
         LineRenderer renderer = Wire.WireObj.GetComponent<LineRenderer>();
@@ -203,7 +236,7 @@ public class wireManager : MonoBehaviour
 
         // ワイヤーを伸ばすコルーチンを呼ぶ
         StretchingWire SW = Wire.Cylinder.GetComponent<StretchingWire>();
-        SW.Stretch(Wire.Cylinder, Wire.Cylinder.transform.position, LimitLeg, rad);
+        SW.Stretch(Wire.Cylinder, Wire.Cylinder.transform.position, NowLeg, Angle);
 
         // ポイントのコライダーをture
         BoxCollider BoxCol = Wire.Point.GetComponent<BoxCollider>();
@@ -223,46 +256,6 @@ public class wireManager : MonoBehaviour
         // リストに追加
         wireList.Add(Wire);
     }
-
-
-    /// <summary>
-    /// ラインを削除
-    /// </summary>
-    /// <param name="id">要素数</param>
-    //public void WireDelete(int id)
-    //{
-    //    int isActive = 0;
-
-    //    // タグが付いたオブジェクトリストを取得
-    //    List<GameObject> List = ObjectManager.ObjectManager.Instance.ByTag(Search.Tags.Line);
-    //    // リストが空
-    //    if (List == null) {
-    //        return;
-    //    }
-
-    //    // ID番目のワイヤーオブジェクトを解放
-    //    ObjectManager.ObjectPool.Instance.ReleaseGameObject(wireList[id].WireObj);
-
-    //    // アクティブtrueのオブジェクトを数える
-    //    foreach(GameObject obj in List) {
-    //        if (!obj.active) continue;
-    //        isActive++;
-    //    }
-    //    // アクティブ0だと初期化
-    //    if (isActive == 0) {
-    //        // プレイヤーの子に入っているワイヤーのオブジェクトをPoolに返す
-    //        foreach (Transform child in transform) {
-    //            if (child.tag != "wire") continue;
-
-    //            child.parent = ObjectManager.ObjectPool.Instance.transform;
-    //        }
-
-    //        wireList.Clear();
-    //        LNum = 0;
-    //        bWireMax = false;
-    //    }
-
-    //}
 
 
     /// <summary>
@@ -318,6 +311,8 @@ public class wireManager : MonoBehaviour
         Wire = null;
         LNum = 0;
         bWireMax = false;
+
+        gameCamera.OffsetMove(_plyaerCtrl.GetBoostCameraPos(), _plyaerCtrl.BoostStart);
     }
 
 
@@ -342,11 +337,21 @@ public class wireManager : MonoBehaviour
 
 
     /// <summary>
-    /// 線の長さを返す
+    /// 線の最長を返す
     /// </summary>
     /// <returns>float 線の長さ</returns>
-    public float GetLineLenght ()
+    public float GetLimitLength()
     {
         return LimitLeg;
+    }
+
+
+    /// <summary>
+    /// 線の現在の長さを返す
+    /// </summary>
+    /// <returns>現在の長さ:float</returns>
+    public float GetNowLength()
+    {
+        return NowLeg;
     }
 }
